@@ -1,0 +1,5 @@
+.env
+audios*
+__pycache__*
+
+ApiGateway
