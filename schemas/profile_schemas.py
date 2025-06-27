@@ -16,6 +16,19 @@ class AsdProfileSchema(BaseModel):
     emotionsKnown: List[str] = Field(default_factory=list, example=["alegría", "tristeza", "temor"])
     instructionsComprehension: Annotated[str, StringConstraints(pattern="^(bajo|medio|alto)$")] = Field(..., example="medio")
     avoidingStimuly: str = Field(..., example="Sonidos fuertes")
+
+class AsdProfileUpdateSchema(BaseModel):
+    firstname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Jose")
+    lastname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Armando")
+    age: Optional[Annotated[int, Field(ge=6, le=11)]] = Field(..., example=8)
+    gender: Optional[Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")]] = Field(..., example="femenino")
+    severityLevel: Optional[Annotated[int, Field(ge=1, le=2)]] = Field(..., example=2)
+    favouriteColor: Optional[str] = Field(..., example="azul")
+    avatar: Optional[str] = Field(None)
+    visualComprehension: Optional[Annotated[int, Field(ge=1, le=3)]] = Field(..., example=2)
+    emotionsKnown: Optional[List[str]] = Field(default_factory=list, example=["alegría", "tristeza", "temor"])
+    instructionsComprehension: Optional[Annotated[str, StringConstraints(pattern="^(bajo|medio|alto)$")]] = Field(..., example="medio")
+    avoidingStimuly: Optional[str] = Field(..., example="Sonidos fuertes")
     
 class AsdProfileResponse(AsdProfileSchema):
     id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")

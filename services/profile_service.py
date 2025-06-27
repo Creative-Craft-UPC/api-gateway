@@ -22,6 +22,9 @@ async def get_carer_profile_by_id(carer_id: str):
 async def get_carer_profile_by_email(email: str):
     return await request ("GET", f"{PROFILE_SERVICE_URL}/carer_profiles/email/{email}")
 
+async def update_profile_for_asd(asdProfile: AsdProfileSchema, asd_id: str):
+    return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{asd_id}", json=asdProfile.dict())
+
 async def update_asd_profile_activities_exercices(profile_id: str, exercices: list, activities: list):
     return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{profile_id}/update-education", json={
         "exercises": exercices,

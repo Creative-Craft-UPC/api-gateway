@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
 from helpers.profile_helper import asd_profile_helper, carer_profile_helper
-from schemas.profile_schemas import AsdProfileResponse, CarerProfileResponse, CarerProfileSchema
-from services.profile_service import create_carer_profile, get_asd_profile_by_carer_id, get_asd_profile_by_id, get_carer_profile_by_email, get_carer_profile_by_id
+from schemas.profile_schemas import AsdProfileResponse, AsdProfileSchema, AsdProfileUpdateSchema, CarerProfileResponse, CarerProfileSchema
+from services.profile_service import create_carer_profile, get_asd_profile_by_carer_id, get_asd_profile_by_id, get_carer_profile_by_email, get_carer_profile_by_id, update_profile_for_asd
 
 router = APIRouter()
 
@@ -12,13 +12,22 @@ async def get_profile_by_id_for_carer(carer_id: str):
     carer_profile = await get_carer_profile_by_id(carer_id)
     return await carer_profile_helper(carer_profile)
 
-@router.post("carer_profile/login/{email}", response_model=CarerProfileResponse)
+@router.post("/carer_profile/login/{email}", response_model=CarerProfileResponse)
 async def login_profile(email: str):
     response = await get_carer_profile_by_email(email)
     if response:
         return await carer_profile_helper(response)
     else:
         raise HTTPException(status_code=404, detail="Usuario no está registrado")
+    
+@router.patch("/asd_profile/{asd_id}", response_model=AsdProfileResponse)
+async def update_asd_profile_by_id(asd_id: str, asdProfile: AsdProfileUpdateSchema):
+    response = await update_profile_for_asd(asdProfile, asd_id)
+    if response:
+        return await asd_profile_helper(response)
+    else:
+        raise HTTPException(status_code=404, detail="Usuario no está registrado o datos incompletos")
+
 
 #GET asd profiles by carer ID
 @router.get("/asd_profile/carer/{carer_id}",response_model=list[AsdProfileResponse])
