@@ -37,15 +37,15 @@ async def update_exercice_by_id(exercice: ExercicesSchema, exercice_id: str):
     exercice_updated = await update_exercice(exercice_id, exercice.dict())
     return await exercice_helper(exercice_updated)
 
-@router.post("/generate/exercices", response_model=list[ExercicesResponse])
-async def generate_exercices(asd_profile: AsdProfileSchema):
-    response = await generate_stories_exercices(asd_profile)
-    return response
+#@router.post("/generate/exercices", response_model=list[ExercicesResponse])
+#async def generate_exercices(asd_profile: AsdProfileSchema):
+#    response = await generate_stories_exercices(asd_profile)
+#    return response
 
-@router.post("/generate/exercices/audio", response_model=list[ExercicesResponse])
-async def generate_audio_exercices(asd_profile: AsdProfileSchema):
-    response = await generate_listen_exercices(asd_profile)
-    return response
+#@router.post("/generate/exercices/audio", response_model=list[ExercicesResponse])
+#async def generate_audio_exercices(asd_profile: AsdProfileSchema):
+#    response = await generate_listen_exercices(asd_profile)
+#    return response
 
 @router.get("/activities/{activity_id}", response_model=ActivityResponse)
 async def get_education_activity_by_id(activity_id: str):
