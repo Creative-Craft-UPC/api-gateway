@@ -3,9 +3,6 @@ from routers import education_routes, profile_education_routes, profile_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Gateway API")
-
-from fastapi.middleware.cors import CORSMiddleware
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # O usa el dominio de tu frontend
