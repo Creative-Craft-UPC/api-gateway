@@ -12,6 +12,6 @@ app.add_middleware(
 )
 
 
-app.include_router(profile_education_routes.router, prefix="/gateway/profile-educatiton", tags=["Profile_education"])
+app.include_router(profile_education_routes.router, prefix="/gateway/profile-education", tags=["Profile_education"])
 app.include_router(profile_routes.router, prefix="/gateway/profile", tags=["Profile"])
 app.include_router(education_routes.router, prefix="/gateway/education",tags=["Education"])
