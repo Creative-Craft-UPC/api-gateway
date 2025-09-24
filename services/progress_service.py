@@ -1,5 +1,5 @@
 from schemas.ia_schema import AudioPromptSchema
-from schemas.progress_schema import ExerciceHistoryDto
+from schemas.progress_schema import AttemptDto, ExerciceHistoryDto, ExerciceHistorySchema
 from utils.http_client import request
 
 
@@ -15,12 +15,29 @@ async def post_create_exercice_history(exercice_history: ExerciceHistoryDto):
     }
     return await request("POST", f"{PROGRESS_SERVICE_URL}/exercice_histories/", json=data)
 
+async def post_create_attempt(attempt: AttemptDto):
+    data = attempt.dict()
+    return await request("POST", f"{PROGRESS_SERVICE_URL}/attempts", json=data)
+
 async def get_exercice_histories():
     return await request("GET", f"{PROGRESS_SERVICE_URL}/exercice_histories/")
 
-async def get_exercice_histories_by_id(history_id: str):
+async def get_exercice_history_by_id(history_id: str):
     return await request("GET", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
 
-async def post_generate_audio_realtime(audioPrompt: AudioPromptSchema):
-    data = audioPrompt.dict()
-    return await request("POST", f"{IA_SERVICE_URL}/api/model/audio/real-time", json=data)
+async def get_exercice_histories_by_user_id(history_id: str):
+    return await request("GET", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
+
+async def get_attempts_by_history_id(history_id: str):
+    return await request("GET", f"{PROGRESS_SERVICE_URL}/attempt/{history_id}")
+
+async def patch_attempt(history_id: str, history: ExerciceHistorySchema):
+    data = history.dict()
+    return await request("PATCH", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
+
+
+async def delete_attempt(attempt_id: str):
+    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/attempts/{attempt_id}")
+
+async def delete_exercice_history(history_id: str):
+    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
