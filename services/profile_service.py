@@ -31,6 +31,12 @@ async def update_asd_profile_activities_exercices(profile_id: str, exercices: li
         "activities": activities
     })
 
+async def update_asd_profile_exercice_histories(profile_id: str, exercice_histories: list):
+    return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{profile_id}/update-exercice-histories", json={
+        "exercice_histories": exercice_histories,
+    })
+
+
 async def create_asd_profile(asdProfile: AsdProfileSchema, carer_id: str):
     data = asdProfile.dict()
     return await request("POST", f"{PROFILE_SERVICE_URL}/asd_profiles/{carer_id}", json=data)

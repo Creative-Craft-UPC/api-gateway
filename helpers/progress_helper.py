@@ -2,6 +2,8 @@ from typing import List
 
 from bson import ObjectId
 
+from services.progress_service import get_attempts_by_history_id
+
 def attempt_helper(attempt: dict) -> dict:
     return {
         "id": str(attempt["_id"]),
@@ -9,12 +11,9 @@ def attempt_helper(attempt: dict) -> dict:
         "errors_quantity": attempt["errors_quantity"],
     }
 
-async def exercice_history_helper(exercice_history: dict, attempt_collection) -> dict:
+async def exercice_history_helper(exercice_history: dict) -> dict:
     attempts: List[dict] = []
-    for attempt_id in exercice_history.get("attempts", []):
-        attempt_doc = await attempt_collection.find_one({"_id": ObjectId(attempt_id)})
-        if attempt_doc:
-            attempts.append(attempt_helper(attempt_doc))
+    attempts = get_attempts_by_history_id(str(exercice_history["_id"]))
 
     return {
         "id": str(exercice_history["_id"]),

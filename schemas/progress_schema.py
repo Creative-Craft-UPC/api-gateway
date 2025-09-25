@@ -25,6 +25,11 @@ class ExerciceHistorySchema(BaseModel):
 class ExerciceHistoryDto(BaseModel):
     exerciceId: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
 
+class ProgressDto(BaseModel):
+    exerciceId: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
+    time: float
+    errors_quantity: int
+
 class ExerciceHistoryResponse(BaseModel):
     id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
     max_time: float

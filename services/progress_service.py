@@ -1,5 +1,6 @@
 from schemas.ia_schema import AudioPromptSchema
 from schemas.progress_schema import AttemptDto, ExerciceHistoryDto, ExerciceHistorySchema
+from services.profile_service import get_asd_profile_by_id
 from utils.http_client import request
 
 
@@ -25,9 +26,6 @@ async def get_exercice_histories():
 async def get_exercice_history_by_id(history_id: str):
     return await request("GET", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
 
-async def get_exercice_histories_by_user_id(history_id: str):
-    return await request("GET", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
-
 async def get_attempts_by_history_id(history_id: str):
     return await request("GET", f"{PROGRESS_SERVICE_URL}/attempt/{history_id}")
 
@@ -41,3 +39,17 @@ async def delete_attempt(attempt_id: str):
 
 async def delete_exercice_history(history_id: str):
     return await request("DELETE", f"{PROGRESS_SERVICE_URL}/exercice_histories/{history_id}")
+
+
+async def get_exercice_histories_by_user_id(profile_id: str):
+    asd_data = await get_asd_profile_by_id(profile_id)
+    exercice_histories = []
+    exercice_histories_id = asd_data.get("exercice_histories", [])
+    if exercice_histories_id:
+        for id in exercice_histories_id:
+            exercice_history = await get_exercice_history_by_id(id)
+            if exercice_history:
+                exercice_histories.append(exercice_history)
+    return exercice_histories
+        
+        
