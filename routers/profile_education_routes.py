@@ -48,7 +48,7 @@ async def attach_education(asd_id: str):
     )
     return await asd_profile_helper(updated_profile)
 
-@router.get("asd_profiles/{asd_id}/get_records", response_model=list[RecordResponse])
+@router.get("/asd_profiles/{asd_id}/get_records", response_model=list[RecordResponse])
 async def get_all_records_by_asd_asd_id(asd_id: str):
     records = await get_records_by_user_id(asd_id)
     return records
