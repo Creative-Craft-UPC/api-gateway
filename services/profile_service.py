@@ -2,7 +2,8 @@ import httpx
 from schemas.profile_schemas import AsdProfileSchema, CarerProfileSchema
 from utils.http_client import request
 
-PROFILE_SERVICE_URL = "https://backend-profile-service-1023529830652.europe-west1.run.app"
+#PROFILE_SERVICE_URL = "https://backend-profile-service-1023529830652.europe-west1.run.app"
+PROFILE_SERVICE_URL = "http://localhost:8010"
 
 async def get_asd_profiles():
     return await request("GET", f"{PROFILE_SERVICE_URL}/asd_profiles/")
@@ -31,9 +32,9 @@ async def update_asd_profile_activities_exercices(profile_id: str, exercices: li
         "activities": activities
     })
 
-async def update_asd_profile_exercice_histories(profile_id: str, exercice_histories: list):
-    return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{profile_id}/update-exercice-histories", json={
-        "exercice_histories": exercice_histories,
+async def update_asd_profile_records_service(profile_id: str, records: list):
+    return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{profile_id}/update-records", json={
+        "records": records,
     })
 
 
