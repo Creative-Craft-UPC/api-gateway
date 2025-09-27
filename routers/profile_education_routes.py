@@ -61,13 +61,13 @@ async def update_asd_profile_records(asd_id: str, data: ProgressDto):
     asd_profile_updated = asd_profile
     if len(records) > 0:
         record_id_list = asd_profile.get("records", [])
-        found = next((e for e in records if e["exercice_id"] == data.exercice_id), None)
+        found = next((e for e in records if e["exercise_id"] == data.exercise_id), None)
         if found:
             attempt_dto = AttemptDto(time= data.time, errors_quantity= data.errors_quantity)
             attempt = await post_create_attempt(attempt_dto, found["id"])
         else:
             record_dto = RecordDto(
-                exercice_id= data.exercice_id
+                exercise_id= data.exercise_id
             )
             new_record = await post_create_record(record_dto)
             record_id_list.append(str(new_record["id"]))
@@ -80,7 +80,7 @@ async def update_asd_profile_records(asd_id: str, data: ProgressDto):
 
     else:
         record_dto = RecordDto(
-            exercice_id= data.exercice_id
+            exercise_id= data.exercise_id
         )
         new_record = await post_create_record(record_dto)
         

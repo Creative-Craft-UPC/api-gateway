@@ -22,7 +22,7 @@ async def record_helper(record: dict) -> dict:
         "min_time": record["min_time"],
         "attempts": attempts,
         "total_errors": record["total_errors"],
-        "exercice_id": record.get("exercice_id")
+        "exercise_id": record.get("exercise_id")
 
     }
 

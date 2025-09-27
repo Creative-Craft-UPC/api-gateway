@@ -12,7 +12,7 @@ async def post_create_record(record: RecordDto):
         "min_time" : 0, 
         "attempts" : [],
         "total_errors": 0, 
-        "exercice_id": record.exercice_id,
+        "exercise_id": record.exercise_id,
     }
     return await request("POST", f"{PROGRESS_SERVICE_URL}/records/", json=data)
 
