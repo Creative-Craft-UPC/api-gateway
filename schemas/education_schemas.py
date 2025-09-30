@@ -13,15 +13,15 @@ class ActivityBase(BaseModel):
 class ActivitySchema(ActivityBase):
     instructions: Annotated[str, StringConstraints(min_length=1)] = Field(..., example="Escucha atentamente el audio, espera a que termine y selecciona la emoción que expresa.")
     statement: Annotated[str, StringConstraints(min_length=1)] = Field(None, example="Arma el rompecabezas")
-    audio: Optional[str] = Field(..., example="audio_exercice_3781j3i190djd38.mp3")
+    audio: Optional[str] = Field(..., example="audio_exercise_3781j3i190djd38.mp3")
 
 
 class ActivityResponse(ActivitySchema):
     id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
 
 
-class ExercicesSchema(ActivityBase):
-    audio: Optional[str] = Field(..., example="audio_exercice_3781j3i190djd38.mp3")
+class ExercisesSchema(ActivityBase):
+    audio: Optional[str] = Field(..., example="audio_exercise_3781j3i190djd38.mp3")
     question: Optional[str] = Field(None, example="¿Cómo se siente el niño?")
     answer: str = Field(..., example="alegria")
     options: List[str] = Field(default_factory=list, example=["alegría", "tristeza", "temor"])
@@ -29,5 +29,5 @@ class ExercicesSchema(ActivityBase):
     principal_image: Optional[str] = Field(None, example="main_image.png")
 
 
-class ExercicesResponse(ExercicesSchema):
+class ExercisesResponse(ExercisesSchema):
     id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")

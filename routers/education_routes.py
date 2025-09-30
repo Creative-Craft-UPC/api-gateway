@@ -1,11 +1,11 @@
 
 from fastapi import APIRouter, HTTPException
-from helpers.education_helper import activity_helper, exercice_helper
+from helpers.education_helper import activity_helper, exercise_helper
 from helpers.profile_helper import asd_profile_helper
-from schemas.education_schemas import ActivitySchema, ActivityResponse, ExercicesResponse, ExercicesSchema
+from schemas.education_schemas import ActivitySchema, ActivityResponse, ExercisesResponse, ExercisesSchema
 from schemas.profile_schemas import AsdProfileResponse, AsdProfileSchema
-from services.profile_service import create_asd_profile, update_asd_profile_activities_exercices
-from services.education_service import create_default_activities, generate_instruction_audios, generate_listen_exercices, generate_stories_exercices, get_activity_by_id, get_exercice_by_id, update_activity, update_exercice
+from services.profile_service import create_asd_profile, update_asd_profile_activities_exercises
+from services.education_service import create_default_activities, generate_instruction_audios, generate_listen_exercises, generate_stories_exercises, get_activity_by_id, get_exercise_by_id, update_activity, update_exercise
 
 
 
@@ -28,23 +28,23 @@ async def update_activity_by_id(activity: ActivitySchema, activity_id: str):
 
     return await activity_helper(activity_updated)
 
-@router.put("/exercices/{exercice_id}", response_model=ExercicesResponse)
-async def update_exercice_by_id(exercice: ExercicesSchema, exercice_id: str):
-    db_exercice = await get_exercice_by_id(exercice_id)
-    if not db_exercice:
+@router.put("/exercises/{exercise_id}", response_model=ExercisesResponse)
+async def update_exercise_by_id(exercise: ExercisesSchema, exercise_id: str):
+    db_exercise = await get_exercise_by_id(exercise_id)
+    if not db_exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
     
-    exercice_updated = await update_exercice(exercice_id, exercice.dict())
-    return await exercice_helper(exercice_updated)
+    exercise_updated = await update_exercise(exercise_id, exercise.dict())
+    return await exercise_helper(exercise_updated)
 
-#@router.post("/generate/exercices", response_model=list[ExercicesResponse])
-#async def generate_exercices(asd_profile: AsdProfileSchema):
-#    response = await generate_stories_exercices(asd_profile)
+#@router.post("/generate/exercises", response_model=list[ExercisesResponse])
+#async def generate_exercises(asd_profile: AsdProfileSchema):
+#    response = await generate_stories_exercises(asd_profile)
 #    return response
 
-#@router.post("/generate/exercices/audio", response_model=list[ExercicesResponse])
-#async def generate_audio_exercices(asd_profile: AsdProfileSchema):
-#    response = await generate_listen_exercices(asd_profile)
+#@router.post("/generate/exercises/audio", response_model=list[ExercisesResponse])
+#async def generate_audio_exercises(asd_profile: AsdProfileSchema):
+#    response = await generate_listen_exercises(asd_profile)
 #    return response
 
 @router.get("/activities/{activity_id}", response_model=ActivityResponse)
@@ -54,9 +54,9 @@ async def get_education_activity_by_id(activity_id: str):
         raise HTTPException(status_code=404, detail="Activity not found")
     return await activity_helper(response)
 
-@router.get("/exercices/{exercice_id}", response_model=ExercicesResponse)
-async def get_education_exercice_by_id(exercice_id: str):
-    response = await get_exercice_by_id(exercice_id)
+@router.get("/exercises/{exercise_id}", response_model=ExercisesResponse)
+async def get_education_exercise_by_id(exercise_id: str):
+    response = await get_exercise_by_id(exercise_id)
     if not response:
-        raise HTTPException(status_code=404, detail="Exercice not found")
-    return await exercice_helper(response)
+        raise HTTPException(status_code=404, detail="Exercise not found")
+    return await exercise_helper(response)

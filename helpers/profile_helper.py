@@ -1,7 +1,7 @@
 
 from typing import List
 
-from services.education_service import get_activity_by_id, get_exercice_by_id
+from services.education_service import get_activity_by_id, get_exercise_by_id
 from services.profile_service import get_asd_profile_by_id
 from services.progress_service import get_record_by_id
 
@@ -12,11 +12,11 @@ async def asd_profile_helper(asdProfile: dict) -> dict:
         if activity:
             activities.append(activity)
 
-    exercices: List[dict] = []
-    for exercice_id in asdProfile.get("exercices", []):
-        exercice = await get_exercice_by_id(exercice_id)
-        if exercice:
-            exercices.append(exercice)
+    exercises: List[dict] = []
+    for exercise_id in asdProfile.get("exercises", []):
+        exercise = await get_exercise_by_id(exercise_id)
+        if exercise:
+            exercises.append(exercise)
 
     records: List[dict] = []
     for record_id in asdProfile.get("records", []):
@@ -38,7 +38,7 @@ async def asd_profile_helper(asdProfile: dict) -> dict:
         "instructionsComprehension": asdProfile["instructionsComprehension"],
         "avoidingStimuly": asdProfile["avoidingStimuly"],
         "activities": activities,
-        "exercices": exercices,
+        "exercises": exercises,
         "records": records,
     } 
 

@@ -2,7 +2,7 @@ from typing import Annotated, List, Optional
 
 from pydantic import BaseModel, Field, StringConstraints
 
-from schemas.education_schemas import ActivityResponse, ActivitySchema, ExercicesResponse, ExercicesSchema
+from schemas.education_schemas import ActivityResponse, ActivitySchema, ExercisesResponse, ExercisesSchema
 from schemas.progress_schema import RecordResponse
 
 class AsdProfileSchema(BaseModel):
@@ -34,7 +34,7 @@ class AsdProfileUpdateSchema(BaseModel):
 class AsdProfileResponse(AsdProfileSchema):
     id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
     activities: List[ActivityResponse]
-    exercices: List[ExercicesResponse]
+    exercises: List[ExercisesResponse]
     records: List[RecordResponse]
 
 class CarerProfileSchema(BaseModel):
@@ -54,7 +54,7 @@ class UpdateEducationforAsdProfileSchema(BaseModel):
     activities: Optional[List[str]] = Field(default_factory=list)
     exercises: Optional[List[str]] = Field(default_factory=list)
 
-class UpdateExerciceHistoriesForAsdProfileSchema(BaseModel):
+class UpdateExerciseHistoriesForAsdProfileSchema(BaseModel):
     records: Optional[List[str]] = Field(default_factory=list)
 
     
