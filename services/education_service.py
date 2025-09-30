@@ -4,10 +4,10 @@ from typing import List, Literal
 import unicodedata
 from fastapi import HTTPException
 import httpx
-from schemas.education_schemas import ActivitySchema, ExercicesSchema
+from schemas.education_schemas import ActivitySchema, ExercisesSchema
 from schemas.ia_schema import AudioPromptSchema
 from schemas.profile_schemas import AsdProfileSchema
-from services.ia_service import post_generate_audio, post_generate_exercice
+from services.ia_service import post_generate_audio, post_generate_exercise
 from utils.http_client import request
 import uuid
 from datetime import datetime
@@ -17,8 +17,8 @@ EDUCATION_SERVICE_URL = "https://backend-education-service-1023529830652.europe-
 async def get_activity_by_id(activity_id: str):
     return await request("GET", f"{EDUCATION_SERVICE_URL}/activities/{activity_id}")
 
-async def get_exercice_by_id(exercice_id: str):
-    return await request("GET", f"{EDUCATION_SERVICE_URL}/exercices/{exercice_id}")
+async def get_exercise_by_id(exercise_id: str):
+    return await request("GET", f"{EDUCATION_SERVICE_URL}/exercises/{exercise_id}")
 
 async def post_activity(activity: dict):
     return await request("POST",f"{EDUCATION_SERVICE_URL}/activities/",json=activity )
@@ -32,28 +32,28 @@ async def update_activity(activity_id: str, activity: dict):
         "audio": activity.get("audio")
     })
 
-async def create_exercice(exercice: dict):
-    return await request("POST", f"{EDUCATION_SERVICE_URL}/exercices/", json={
-        "audio": exercice.get("audio"),
-        "question": exercice.get("question"),
-        "answer": exercice["answer"],
-        "options": exercice.get("options", []),
-        "image_options": exercice.get("image_options", []),
-        "principal_image": exercice.get("principal_image"),
-        "type": exercice["type"],
-        "subtype": exercice.get("subtype")
+async def create_exercise(exercise: dict):
+    return await request("POST", f"{EDUCATION_SERVICE_URL}/exercises/", json={
+        "audio": exercise.get("audio"),
+        "question": exercise.get("question"),
+        "answer": exercise["answer"],
+        "options": exercise.get("options", []),
+        "image_options": exercise.get("image_options", []),
+        "principal_image": exercise.get("principal_image"),
+        "type": exercise["type"],
+        "subtype": exercise.get("subtype")
     })
 
-async def update_exercice(exercice_id: str, exercice: dict):
-    return await request("PUT", f"{EDUCATION_SERVICE_URL}/exercices/{exercice_id}", json={
-        "audio": exercice.get("audio"),
-        "question": exercice.get("question"),
-        "answer": exercice["answer"],
-        "options": exercice.get("options", []),
-        "image_options": exercice.get("image_options", []),
-        "principal_image": exercice.get("principal_image"),
-        "type": exercice["type"],
-        "subtype": exercice.get("subtype")
+async def update_exercise(exercise_id: str, exercise: dict):
+    return await request("PUT", f"{EDUCATION_SERVICE_URL}/exercises/{exercise_id}", json={
+        "audio": exercise.get("audio"),
+        "question": exercise.get("question"),
+        "answer": exercise["answer"],
+        "options": exercise.get("options", []),
+        "image_options": exercise.get("image_options", []),
+        "principal_image": exercise.get("principal_image"),
+        "type": exercise["type"],
+        "subtype": exercise.get("subtype")
     })
 
 async def get_image_data_by_type_and_concept(type: str, concept: str):
@@ -169,7 +169,7 @@ def get_option_images_url(options: list[str]) -> list[str]:
         url_list.append(url)
     return url_list
 
-async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional", "social"]):
+async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional", "social"]):
     emotions = ["tristeza", "alegria", "miedo", "enojo", "asco", "sorpresa"]
     social_activities = ["decir_adios", "decir_gracias", "decir_hola", "decir_muy_bien", "pedir_ayuda", "pedir_permiso"]
     image_type = ""
@@ -189,7 +189,7 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
                  "emoción \"" + emotion + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_emotional["description"] + ".\" Escoge 2 emociones extra como "
                  "opciones erróneas. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\n\"story\": \"Pedro tocó algo sucio. Pedro tocó basura. Pedro movió las manos. Pedro quería limpiarse. Pedro buscó servilletas. Pedro sintió asco. \", \n\"answer\": \"asco\",\n \"options\": [\"enojo\", \"miedo\"],\n \"type\": \"Historia\",\n \"subtype\": \"emocional\"\n}. ")
-        ia_response_emotional = await post_generate_exercice(prompt_emotional)
+        ia_response_emotional = await post_generate_exercise(prompt_emotional)
         emotional_response_dict = json.loads(ia_response_emotional["response"])
         emotional_options = emotional_response_dict["options"]
         final_emotional_options = emotional_options + [emotional_response_dict["answer"]]
@@ -201,7 +201,7 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
             "instructions": "Habla con voz clara y pausada, toma tiempos, usa un tono infantil y tranquilo."
         }
         url_emotional_audio = await post_generate_audio(audio_emotional_story)
-        emotional_storie_exercice: ExercicesSchema = {
+        emotional_storie_exercise: ExercisesSchema = {
             "audio": url_emotional_audio["audio_url"],
             "question": "¿Cómo se sintió?",
             "answer": emotional_response_dict["answer"],
@@ -211,7 +211,7 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
             "type": "Historias",
             "subtype": "emocional"
         }
-        return emotional_storie_exercice
+        return emotional_storie_exercise
         
     else:
         social_activity = random.choice(social_activities)
@@ -222,7 +222,7 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ".\" Escoge 2 actividades sociales extra como "
                  "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"El profesor entró al salón. La profesor dijo \\\"Buenos días, Marcos\\\". Marcos dijo \\\"Hola, profesor\\\". Marcos dijo hola al profesor.\", \n\"answer\": \"decir hola\",\n \"options\": [\"pedir permiso\", \"decir gracias\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
-        ia_response_social = await post_generate_exercice(prompt_social)
+        ia_response_social = await post_generate_exercise(prompt_social)
         social_response_dict = json.loads(ia_response_social["response"])
         social_options = social_response_dict["options"]
         final_social_options = social_options + [social_response_dict["answer"]]
@@ -234,7 +234,7 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
             "instructions": "Habla con voz clara y pausada, toma tiempos, usa un tono infantil y tranquilo."
         }
         url_social_audio = await post_generate_audio(audio_social_story)
-        social_storie_exercice: ExercicesSchema = {
+        social_storie_exercise: ExercisesSchema = {
             "audio": url_social_audio["audio_url"],
             "question": "¿Qué hicieron?",
             "answer": social_response_dict["answer"],
@@ -244,14 +244,14 @@ async def generate_one_story_exercice(asd_data: dict, type: Literal["emocional",
             "type": "Historias",
             "subtype": "social"
         }
-        return social_storie_exercice
+        return social_storie_exercise
         
 
 
-async def generate_stories_exercices(asd_data: dict):
+async def generate_stories_exercises(asd_data: dict):
     emotions = ["tristeza", "alegria", "miedo", "enojo", "asco", "sorpresa"]
     social_activities = ["decir_adios", "decir_gracias", "decir_hola", "decir_muy_bien", "pedir_ayuda", "pedir_permiso"]
-    story_exercices = []
+    story_exercises = []
     available_emotions = emotions.copy()
     available_social_activities = social_activities.copy()
     for _ in range(3):
@@ -282,8 +282,8 @@ async def generate_stories_exercices(asd_data: dict):
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ". Escoge 2 actividades sociales extra como "
                  "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"El profesor entró al salón. La profesor dijo \\\"Buenos días, Marcos\\\". Marcos dijo \\\"Hola, profesor\\\". Marcos dijo hola al profesor.\", \n\"answer\": \"decir hola\",\n \"options\": [\"pedir permiso\", \"decir gracias\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
-        ia_response_emotional = await post_generate_exercice(prompt_emotional)
-        ia_response_social = await post_generate_exercice(prompt_social)
+        ia_response_emotional = await post_generate_exercise(prompt_emotional)
+        ia_response_social = await post_generate_exercise(prompt_social)
         emotional_response_dict = json.loads(ia_response_emotional["response"])
         social_response_dict = json.loads(ia_response_social["response"])
         
@@ -311,7 +311,7 @@ async def generate_stories_exercices(asd_data: dict):
         final_social_options = social_options + [social_response_dict["answer"]]
         random.shuffle(final_social_options)
 
-        emotional_storie_exercice: ExercicesSchema = {
+        emotional_storie_exercise: ExercisesSchema = {
             "audio": url_emotional_audio["audio_url"],
             "question": "¿Cómo se sintió?",
             "answer": emotional_response_dict["answer"],
@@ -321,7 +321,7 @@ async def generate_stories_exercices(asd_data: dict):
             "type": "Historias",
             "subtype": "emocional"
         }
-        social_storie_exercice: ExercicesSchema = {
+        social_storie_exercise: ExercisesSchema = {
             "audio": url_social_audio["audio_url"],
             "question": "¿Qué hicieron?",
             "answer": social_response_dict["answer"],
@@ -331,12 +331,12 @@ async def generate_stories_exercices(asd_data: dict):
             "type": "Historias",
             "subtype": "social"
         }
-        story_exercices.append(emotional_storie_exercice)
-        story_exercices.append(social_storie_exercice)
-    return story_exercices
+        story_exercises.append(emotional_storie_exercise)
+        story_exercises.append(social_storie_exercise)
+    return story_exercises
 
 
-async def generate_listen_exercices(asd_data: dict):
+async def generate_listen_exercises(asd_data: dict):
     emotions = ["tristeza", "alegria", "miedo", "enojo", "asco", "sorpresa"]
     available_emotions = emotions.copy()
     phrase_exercies = []
@@ -348,7 +348,7 @@ async def generate_listen_exercices(asd_data: dict):
               " años, en la que se refleje la emoción \"" + emotion + "\". Para este ejercicio, debes inventar "
               "una frase que niños con el nivel de TEA y de esa edad puedan decir y/o comprender, "
               "en base a la emoción. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\"phrase\": \"Estoy triste porque perdí mi juguete.\",\"answer\": \"tristeza\",\"options\": [\"alegría\", \"asco\"],\"type\": \"Escucha emoción\",\"subtype\": \"emocional\"}")
-        ia_response = await post_generate_exercice(prompt)
+        ia_response = await post_generate_exercise(prompt)
         response_dict = json.loads(ia_response["response"])
         emotional_options = response_dict["options"]
         audio_phrase: AudioPromptSchema = {
@@ -360,7 +360,7 @@ async def generate_listen_exercices(asd_data: dict):
         url_audio = await post_generate_audio(audio_phrase)
         final_emotional_options = emotional_options + [response_dict["answer"]]
         random.shuffle(final_emotional_options)
-        phrase_exercice: ExercicesSchema = {
+        phrase_exercise: ExercisesSchema = {
             "audio": url_audio["audio_url"],
             "question": "¿Qué emoción es?",
             "answer": response_dict["answer"],
@@ -369,22 +369,22 @@ async def generate_listen_exercices(asd_data: dict):
             "type": "Escucha emoción",
             "subtype": "emocional"
         }
-        phrase_exercies.append(phrase_exercice)
+        phrase_exercies.append(phrase_exercise)
     return phrase_exercies
         
 
 
 async def create_initial_exercises(asd_profile: dict):
-    story_exercices = await generate_stories_exercices(asd_profile)
-    listen_exercices = await generate_listen_exercices(asd_profile)
+    story_exercises = await generate_stories_exercises(asd_profile)
+    listen_exercises = await generate_listen_exercises(asd_profile)
 
-    total_exercices = story_exercices + listen_exercices
-    user_exercices = []
-    for exercice in total_exercices:
-        response = await create_exercice(exercice)
+    total_exercises = story_exercises + listen_exercises
+    user_exercises = []
+    for exercise in total_exercises:
+        response = await create_exercise(exercise)
         if response:
-            user_exercices.append(response)
-    return user_exercices
+            user_exercises.append(response)
+    return user_exercises
     
     
 

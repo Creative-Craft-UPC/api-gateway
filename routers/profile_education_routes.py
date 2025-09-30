@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from helpers.profile_helper import asd_profile_helper
 from schemas.profile_schemas import AsdProfileResponse, AsdProfileSchema
 from schemas.progress_schema import AttemptDto, ProgressDto, RecordDto, RecordResponse
-from services.profile_service import create_asd_profile, get_asd_profile_by_id, update_asd_profile_activities_exercices, update_asd_profile_records_service
+from services.profile_service import create_asd_profile, get_asd_profile_by_id, update_asd_profile_activities_exercises, update_asd_profile_records_service
 from services.progress_service import get_records_by_user_id, post_create_record
 from services.education_service import create_default_activities, create_initial_exercises
 from services.progress_service import post_create_attempt
@@ -18,33 +18,33 @@ async def create_profile_for_asd(profile: AsdProfileSchema, carer_id: str):
     default_activities = await create_default_activities()
 
     #Crear los ejercicios iniciales y guardarlos en bd
-    initial_exercices = await create_initial_exercises(created_asd_profile)
+    initial_exercises = await create_initial_exercises(created_asd_profile)
 
     #Extraer los IDs de las actividades creadas
     activity_ids = [activity["id"] for activity in default_activities]
 
     #Extraer los IDs de los ejercicios creados
-    exercice_ids = [exercice["id"] for exercice in initial_exercices]
+    exercise_ids = [exercise["id"] for exercise in initial_exercises]
 
     #Asignar al perfil creado
-    updated_profile = await update_asd_profile_activities_exercices(
-        created_asd_profile["id"], exercices=exercice_ids, activities=activity_ids
+    updated_profile = await update_asd_profile_activities_exercises(
+        created_asd_profile["id"], exercises=exercise_ids, activities=activity_ids
     )
 
     return await asd_profile_helper(updated_profile)
 
 
-@router.put("/asd_profiles/{asd_id}/generate_all_exercices", response_model=AsdProfileResponse)
+@router.put("/asd_profiles/{asd_id}/generate_all_exercises", response_model=AsdProfileResponse)
 async def attach_education(asd_id: str):
     asd_profile = await get_asd_profile_by_id(asd_id)
     if not asd_profile:
         raise HTTPException(status_code=404, detail=f"User {asd_id} not found")
     
-    new_exercices = await create_initial_exercises(asd_profile)
-    exercice_ids = [exercice["id"] for exercice in new_exercices]
+    new_exercises = await create_initial_exercises(asd_profile)
+    exercise_ids = [exercise["id"] for exercise in new_exercises]
 
-    updated_profile = await update_asd_profile_activities_exercices(
-        asd_profile["id"], exercices=exercice_ids, activities=asd_profile.get("activities", [])
+    updated_profile = await update_asd_profile_activities_exercises(
+        asd_profile["id"], exercises=exercise_ids, activities=asd_profile.get("activities", [])
     )
     return await asd_profile_helper(updated_profile)
 

@@ -9,15 +9,15 @@ async def activity_helper(activity: dict) -> dict:
 
     }
 
-async def exercice_helper(exercice: dict) -> dict:
+async def exercise_helper(exercise: dict) -> dict:
     return{
-        "id": str(exercice["id"]),
-        "audio": exercice.get("audio"),
-        "question": exercice.get("question"),
-        "answer": exercice["answer"],
-        "options": exercice.get("options", []),
-        "image_options": exercice.get("image_options", []),
-        "principal_image": exercice.get("principal_image"),
-        "type": exercice["type"],
-        "subtype": exercice.get("subtype")
+        "id": str(exercise["id"]),
+        "audio": exercise.get("audio"),
+        "question": exercise.get("question"),
+        "answer": exercise["answer"],
+        "options": exercise.get("options", []),
+        "image_options": exercise.get("image_options", []),
+        "principal_image": exercise.get("principal_image"),
+        "type": exercise["type"],
+        "subtype": exercise.get("subtype")
     }
