@@ -36,7 +36,7 @@ async def asd_profile_helper(asdProfile: dict) -> dict:
         "visualComprehension": asdProfile["visualComprehension"],
         "emotionsKnown": asdProfile.get("emotionsKnown", []),
         "instructionsComprehension": asdProfile["instructionsComprehension"],
-        "avoidingStimuly": asdProfile["avoidingStimuly"],
+        "avoidingStimuli": asdProfile["avoidingStimuli"],
         "activities": activities,
         "exercises": exercises,
         "records": records,
