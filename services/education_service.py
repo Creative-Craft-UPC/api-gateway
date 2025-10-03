@@ -163,6 +163,8 @@ def get_option_images_url(options: list[str]) -> list[str]:
             newOption = "alegre"
         elif replaced == "tristeza":
             newOption = "triste"
+        elif replaced == "decir_adiós":
+            newOption = "decir_adios"
         else:
             newOption = replaced
         url = base_url + newOption + ".png"
