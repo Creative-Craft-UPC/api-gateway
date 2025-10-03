@@ -2,7 +2,7 @@ from schemas.ia_schema import AudioPromptSchema
 from utils.http_client import request
 
 
-IA_SERVICE_URL = "https://ai-service-1023529830652.europe-west1.run.app"
+IA_SERVICE_URL = "https://socialfun-ai-service-31496243302.europe-west1.run.app"
 
 async def post_generate_exercise(prompt: str):
     return await request("POST", f"{IA_SERVICE_URL}/api/model/exercise/", json={

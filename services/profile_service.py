@@ -2,7 +2,7 @@ import httpx
 from schemas.profile_schemas import AsdProfileSchema, CarerProfileSchema
 from utils.http_client import request
 
-PROFILE_SERVICE_URL = "https://backend-profile-service-1023529830652.europe-west1.run.app"
+PROFILE_SERVICE_URL = "https://backend-profile-service-31496243302.europe-west1.run.app"
 
 async def get_asd_profiles():
     return await request("GET", f"{PROFILE_SERVICE_URL}/asd_profiles/")
