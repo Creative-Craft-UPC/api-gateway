@@ -12,7 +12,7 @@ from utils.http_client import request
 import uuid
 from datetime import datetime
 
-EDUCATION_SERVICE_URL = "https://backend-education-service-1023529830652.europe-west1.run.app"
+EDUCATION_SERVICE_URL = "https://backend-education-service-31496243302.europe-west1.run.app"
 
 async def get_activity_by_id(activity_id: str):
     return await request("GET", f"{EDUCATION_SERVICE_URL}/activities/{activity_id}")
