@@ -4,7 +4,7 @@ from services.profile_service import get_asd_profile_by_id
 from utils.http_client import request
 
 
-PROGRESS_SERVICE_URL = "https://backend-progress-service-1023529830652.europe-west1.run.app"
+PROGRESS_SERVICE_URL = "https://backend-progress-service-31496243302.europe-west1.run.app"
 
 async def post_create_record(record: RecordDto):
     data = {
