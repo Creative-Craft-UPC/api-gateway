@@ -8,7 +8,7 @@ from schemas.progress_schema import RecordResponse
 class AsdProfileSchema(BaseModel):
     firstname: Annotated[str, StringConstraints(min_length=1, max_length=30)] = Field(..., example="Jose")
     lastname: Annotated[str, StringConstraints(min_length=1, max_length=30)] = Field(..., example="Armando")
-    age: Annotated[int, Field(ge=6, le=11)] = Field(..., example=8)
+    age: int = Field(..., example=8)
     gender: Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")] = Field(..., example="femenino")
     severityLevel: Annotated[int, Field(ge=1, le=2)] = Field(..., example=2)
     favouriteColor: str = Field(..., example="azul")
@@ -21,7 +21,7 @@ class AsdProfileSchema(BaseModel):
 class AsdProfileUpdateSchema(BaseModel):
     firstname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Jose")
     lastname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Armando")
-    age: Optional[Annotated[int, Field(ge=6, le=11)]] = Field(..., example=8)
+    age: Optional[int] = Field(..., example=8)
     gender: Optional[Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")]] = Field(..., example="femenino")
     severityLevel: Optional[Annotated[int, Field(ge=1, le=2)]] = Field(..., example=2)
     favouriteColor: Optional[str] = Field(..., example="azul")
