@@ -171,6 +171,20 @@ def get_option_images_url(options: list[str]) -> list[str]:
         url_list.append(url)
     return url_list
 
+def get_story_size(severityLevel: int) -> str:
+    if severityLevel == 1:
+        return "30 y 40"
+    elif severityLevel == 2:
+        return "20 y 30"
+    else: return "10 y 20"
+
+def get_phrase_size(severityLevel: int) -> str:
+    if severityLevel == 1:
+        return "12"
+    elif severityLevel == 2:
+        return "6"
+    else: return "4"
+
 async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional", "social"]):
     emotions = ["tristeza", "alegria", "miedo", "enojo", "asco", "sorpresa"]
     social_activities = ["decir_adios", "decir_gracias", "decir_hola", "decir_muy_bien", "pedir_ayuda", "pedir_permiso"]
@@ -185,8 +199,8 @@ async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional",
     if type == "emocional":
         emotion = random.choice(emotions)
         data_emotional = await get_image_data_by_type_and_concept(image_type, emotion)
-        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, de entre 20 "
-                "y 40 palabras para un niño con TEA de nivel DSM " + str(asd_data.severityLevel) + 
+        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) + 
+                " palabras para un niño con TEA de nivel DSM " + str(asd_data.severityLevel) + 
                  ", con una edad de " + str(asd_data.age) + " años, que refleje la "
                  "emoción \"" + emotion + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_emotional["description"] + ".\" Escoge 2 emociones extra como "
@@ -218,8 +232,8 @@ async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional",
     else:
         social_activity = random.choice(social_activities)
         data_social = await get_image_data_by_type_and_concept(image_type, social_activity)
-        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, de entre 20 "
-                "y 40 palabras para un niño con TEA de nivel DSM " + str(asd_data.severityLevel) + 
+        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) +
+                " palabras para un niño con TEA de nivel DSM " + str(asd_data.severityLevel) + 
                  ", con una edad de " + str(asd_data.age) + " años, en la que se realize la "
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ".\" Escoge 2 actividades sociales extra como "
@@ -272,14 +286,14 @@ async def generate_stories_exercises(asd_data: dict):
             image_type = "real"
         data_emotional = await get_image_data_by_type_and_concept(image_type, emotion)
         data_social = await get_image_data_by_type_and_concept(image_type, social_activity)
-        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, de entre 20 "
-                "y 40 palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
+        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) +
+                " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
                  ", con una edad de " + str(asd_data["age"]) + " años, que refleje la "
                  "emoción \"" + emotion + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_emotional["description"] + ".\" Escoge 2 emociones extra como "
                  "opciones erróneas. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\n\"story\": \"Pedro tocó algo sucio. Pedro tocó basura. Pedro movió las manos. Pedro quería limpiarse. Pedro buscó servilletas. Pedro sintió asco. \", \n\"answer\": \"asco\",\n \"options\": [\"enojo\", \"miedo\"],\n \"type\": \"Historia\",\n \"subtype\": \"emocional\"\n}. ")
-        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, de entre 20 "
-                "y 40 palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
+        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) +
+                " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
                  ", con una edad de " + str(asd_data["age"]) + " años, en la que se realize la "
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ". Escoge 2 actividades sociales extra como "
@@ -345,8 +359,8 @@ async def generate_listen_exercises(asd_data: dict):
     for _ in range(3):
         emotion = random.choice(available_emotions)
         available_emotions.remove(emotion)
-        prompt = ("Crea un ejercicio tipo: escucha emoción, subtipo: emocional, de no más "
-              "de 12 palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) +", con una edad de "+ str(asd_data["age"]) +
+        prompt = ("Crea un ejercicio tipo: escucha emoción, subtipo: emocional, donde la frase sea de no más de "+ get_phrase_size(asd_data["severityLevel"]) +
+              " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) +", con una edad de "+ str(asd_data["age"]) +
               " años, en la que se refleje la emoción \"" + emotion + "\". Para este ejercicio, debes inventar "
               "una frase que niños con el nivel de TEA y de esa edad puedan decir y/o comprender, "
               "en base a la emoción. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\"phrase\": \"Estoy triste porque perdí mi juguete.\",\"answer\": \"tristeza\",\"options\": [\"alegría\", \"asco\"],\"type\": \"Escucha emoción\",\"subtype\": \"emocional\"}")
