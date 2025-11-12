@@ -42,6 +42,14 @@ async def asd_profile_helper(asdProfile: dict) -> dict:
         "records": records,
     } 
 
+def asd_mask_profile_helper(asdProfile: dict) -> dict:
+    return {
+        "id": str(asdProfile["id"]),
+        "firstname": asdProfile["firstname"],
+        "lastname": asdProfile["lastname"],
+        "avatar": asdProfile.get("avatar"),
+    }
+
 
 async def carer_profile_helper(carerProfile: dict) -> dict:
     asd_profiles: List[dict] = []
@@ -58,5 +66,15 @@ async def carer_profile_helper(carerProfile: dict) -> dict:
         "asd_profiles": asd_profiles
     } 
 
+async def carer_profile_light_helper(carerProfile: dict) -> dict:
+    asd_profiles: List[dict] = []
+    asd_profiles = carerProfile.get("asd_profiles")
+    return {
+        "id": str(carerProfile["id"]),
+        "firstname": carerProfile["firstname"],
+        "lastname": carerProfile["lastname"],
+        "email": carerProfile["email"],
+        "asd_profiles": asd_profiles
+    } 
 
 

@@ -1,22 +1,22 @@
 from fastapi import APIRouter, HTTPException
 
-from helpers.profile_helper import asd_profile_helper, carer_profile_helper
-from schemas.profile_schemas import AsdProfileResponse, AsdProfileSchema, AsdProfileUpdateSchema, CarerProfileResponse, CarerProfileSchema
+from helpers.profile_helper import asd_profile_helper, carer_profile_helper, carer_profile_light_helper
+from schemas.profile_schemas import AsdProfileResponse, AsdProfileSchema, AsdProfileUpdateSchema, CarerProfileLightResponse, CarerProfileResponse, CarerProfileSchema
 from services.profile_service import create_carer_profile, get_asd_profile_by_carer_id, get_asd_profile_by_id, get_carer_profile_by_email, get_carer_profile_by_id, update_profile_for_asd
 
 router = APIRouter()
 
 #GET carer profile by ID
-@router.get("/carer_profile/{carer_id}", response_model=CarerProfileResponse)
+@router.get("/carer_profile/{carer_id}", response_model=CarerProfileLightResponse)
 async def get_profile_by_id_for_carer(carer_id: str):
     carer_profile = await get_carer_profile_by_id(carer_id)
-    return await carer_profile_helper(carer_profile)
+    return await carer_profile_light_helper(carer_profile)
 
-@router.post("/carer_profile/login/{email}", response_model=CarerProfileResponse)
+@router.post("/carer_profile/login/{email}", response_model=CarerProfileLightResponse)
 async def login_profile(email: str):
     response = await get_carer_profile_by_email(email)
     if response:
-        return await carer_profile_helper(response)
+        return await carer_profile_light_helper(response)
     else:
         raise HTTPException(status_code=404, detail="Usuario no está registrado")
     
@@ -41,7 +41,7 @@ async def get_asd_profile_by_id_for_carer(carer_id: str):
     return asd_profiles
 
 #POST new carer profile
-@router.post("/carer_profile", response_model = CarerProfileResponse)
+@router.post("/carer_profile", response_model = CarerProfileLightResponse)
 async def create_profile_for_carer(profile: CarerProfileSchema):
     created_carer_profile = await create_carer_profile(profile)
     if not created_carer_profile:

@@ -204,7 +204,7 @@ async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional",
                  ", con una edad de " + str(asd_data.age) + " años, que refleje la "
                  "emoción \"" + emotion + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_emotional["description"] + ".\" Escoge 2 emociones extra como "
-                 "opciones erróneas. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\n\"story\": \"Pedro tocó algo sucio. Pedro tocó basura. Pedro movió las manos. Pedro quería limpiarse. Pedro buscó servilletas. Pedro sintió asco. \", \n\"answer\": \"asco\",\n \"options\": [\"enojo\", \"miedo\"],\n \"type\": \"Historia\",\n \"subtype\": \"emocional\"\n}. ")
+                 "opciones erróneas. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\n\"story\": \"\", \n\"answer\": \"\",\n \"options\": [\"\", \"\"],\n \"type\": \"Historia\",\n \"subtype\": \"emocional\"\n}. ")
         ia_response_emotional = await post_generate_exercise(prompt_emotional)
         emotional_response_dict = json.loads(ia_response_emotional["response"])
         emotional_options = emotional_response_dict["options"]
@@ -237,7 +237,7 @@ async def generate_one_story_exercise(asd_data: dict, type: Literal["emocional",
                  ", con una edad de " + str(asd_data.age) + " años, en la que se realize la "
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ".\" Escoge 2 actividades sociales extra como "
-                 "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"El profesor entró al salón. La profesor dijo \\\"Buenos días, Marcos\\\". Marcos dijo \\\"Hola, profesor\\\". Marcos dijo hola al profesor.\", \n\"answer\": \"decir hola\",\n \"options\": [\"pedir permiso\", \"decir gracias\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
+                 "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"\", \n\"answer\": \"\",\n \"options\": [\"\", \"\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
         ia_response_social = await post_generate_exercise(prompt_social)
         social_response_dict = json.loads(ia_response_social["response"])
         social_options = social_response_dict["options"]
@@ -286,18 +286,18 @@ async def generate_stories_exercises(asd_data: dict):
             image_type = "real"
         data_emotional = await get_image_data_by_type_and_concept(image_type, emotion)
         data_social = await get_image_data_by_type_and_concept(image_type, social_activity)
-        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) +
+        prompt_emotional = ("Crea un ejercicio tipo: historia, subtipo: emocional, donde la historia sea de entre "+ get_story_size(asd_data["severityLevel"]) +
                 " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
                  ", con una edad de " + str(asd_data["age"]) + " años, que refleje la "
                  "emoción \"" + emotion + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_emotional["description"] + ".\" Escoge 2 emociones extra como "
                  "opciones erróneas. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\n\"story\": \"Pedro tocó algo sucio. Pedro tocó basura. Pedro movió las manos. Pedro quería limpiarse. Pedro buscó servilletas. Pedro sintió asco. \", \n\"answer\": \"asco\",\n \"options\": [\"enojo\", \"miedo\"],\n \"type\": \"Historia\",\n \"subtype\": \"emocional\"\n}. ")
-        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, donde la historia sea de entre "+ get_story_size(asd_data.severityLevel) +
+        prompt_social = ("Crea un ejercicio tipo: historia, subtipo: social, donde la historia sea de entre "+ get_story_size(asd_data["severityLevel"]) +
                 " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) + 
                  ", con una edad de " + str(asd_data["age"]) + " años, en la que se realize la "
                  "actividad \"" + social_activity.replace("_", " ") + "\". Usa esta descripción de una imagen "
                  "para realizarlo: \"" + data_social["description"] + ". Escoge 2 actividades sociales extra como "
-                 "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"El profesor entró al salón. La profesor dijo \\\"Buenos días, Marcos\\\". Marcos dijo \\\"Hola, profesor\\\". Marcos dijo hola al profesor.\", \n\"answer\": \"decir hola\",\n \"options\": [\"pedir permiso\", \"decir gracias\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
+                 "opciones erróneas. Las actividades sociales solo pueden ser estas: \"decir adios\", \"decir gracias\", \"decir hola\", \"decir muy bien\", \"pedir ayuda\", \"pedir permiso\". No inventes otras opciones. Devuelve un JSON con este formato exacto: {\n\"story\": \"\", \n\"answer\": \"\",\n \"options\": [\"\", \"\"],\n \"type\": \"Historia\",\n \"subtype\": \"social\"\n}")
         ia_response_emotional = await post_generate_exercise(prompt_emotional)
         ia_response_social = await post_generate_exercise(prompt_social)
         emotional_response_dict = json.loads(ia_response_emotional["response"])
@@ -363,7 +363,7 @@ async def generate_listen_exercises(asd_data: dict):
               " palabras para un niño con TEA de nivel DSM " + str(asd_data["severityLevel"]) +", con una edad de "+ str(asd_data["age"]) +
               " años, en la que se refleje la emoción \"" + emotion + "\". Para este ejercicio, debes inventar "
               "una frase que niños con el nivel de TEA y de esa edad puedan decir y/o comprender, "
-              "en base a la emoción. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\"phrase\": \"Estoy triste porque perdí mi juguete.\",\"answer\": \"tristeza\",\"options\": [\"alegría\", \"asco\"],\"type\": \"Escucha emoción\",\"subtype\": \"emocional\"}")
+              "en base a la emoción. Las emociones solo pueden ser estas: \"tristeza\", \"alegria\", \"miedo\", \"enojo\", \"asco\", \"sorpresa\". Devuelve un JSON con este formato exacto: {\"phrase\": \"\",\"answer\": \"\",\"options\": [\"\", \"\"],\"type\": \"Escucha emoción\",\"subtype\": \"emocional\"}")
         ia_response = await post_generate_exercise(prompt)
         response_dict = json.loads(ia_response["response"])
         emotional_options = response_dict["options"]

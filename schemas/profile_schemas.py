@@ -37,6 +37,13 @@ class AsdProfileResponse(AsdProfileSchema):
     exercises: List[ExercisesResponse]
     records: List[RecordResponse]
 
+class AsdProfileMaskResponse(BaseModel):
+    id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
+    firstname: str
+    lastname: str
+    avatar: Optional[str] = Field(None)
+    
+
 class CarerProfileSchema(BaseModel):
     firstname: Annotated[str, StringConstraints(min_length=1)] = Field(..., example="Martin")
     lastname: Annotated[str, StringConstraints(min_length=1)] = Field(..., example="Cueva")
@@ -49,6 +56,13 @@ class CarerProfileResponse(BaseModel):
     lastname: str
     email: str
     asd_profiles: List[AsdProfileResponse]
+
+class CarerProfileLightResponse(BaseModel):
+    id: str
+    firstname: str
+    lastname: str
+    email: str
+    asd_profiles: List[AsdProfileMaskResponse]
 
 class UpdateEducationforAsdProfileSchema(BaseModel):
     activities: Optional[List[str]] = Field(default_factory=list)
