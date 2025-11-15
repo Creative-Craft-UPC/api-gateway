@@ -1,5 +1,7 @@
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from auth.firebase_dep import get_current_user
+from auth.internal_token import mint_internal_token
 from helpers.education_helper import activity_helper, exercise_helper
 from helpers.profile_helper import asd_profile_helper
 from schemas.education_schemas import ActivitySchema, ActivityResponse, ExercisesResponse, ExercisesSchema
@@ -12,7 +14,10 @@ from services.education_service import create_default_activities, generate_instr
 router = APIRouter()
 
 @router.put("/activities/{activity_id}", response_model=ActivityResponse)
-async def update_activity_by_id(activity: ActivitySchema, activity_id: str):
+async def update_activity_by_id(activity: ActivitySchema, activity_id: str, user=Depends(get_current_user)):
+    user_id = user["uid"]
+    internal_token = mint_internal_token(user_id=user_id)
+    headers={"Authorization": f"Bearer {internal_token}"}
     activity_dict = activity.dict()
     db_activity = await get_activity_by_id(activity_id)
     if not db_activity:
@@ -20,21 +25,24 @@ async def update_activity_by_id(activity: ActivitySchema, activity_id: str):
     
     if db_activity["instructions"] != activity_dict["instructions"]:
         activity_instruction = activity_dict["instructions"]
-        new_audio_url = await generate_instruction_audios([activity_instruction])
+        new_audio_url = await generate_instruction_audios([activity_instruction], headers=headers)
         activity_dict["audio"] = new_audio_url[0]
     else:
         activity_dict["audio"] = db_activity["audio"]
-    activity_updated = await update_activity(activity_id, activity_dict)
+    activity_updated = await update_activity(activity_id, activity_dict, headers=headers)
 
     return await activity_helper(activity_updated)
 
 @router.put("/exercises/{exercise_id}", response_model=ExercisesResponse)
-async def update_exercise_by_id(exercise: ExercisesSchema, exercise_id: str):
-    db_exercise = await get_exercise_by_id(exercise_id)
+async def update_exercise_by_id(exercise: ExercisesSchema, exercise_id: str, user=Depends(get_current_user)):
+    user_id = user["uid"]
+    internal_token = mint_internal_token(user_id=user_id)
+    headers={"Authorization": f"Bearer {internal_token}"}
+    db_exercise = await get_exercise_by_id(exercise_id, headers=headers)
     if not db_exercise:
         raise HTTPException(status_code=404, detail="Ejercicio no encontrado")
     
-    exercise_updated = await update_exercise(exercise_id, exercise.dict())
+    exercise_updated = await update_exercise(exercise_id, exercise.dict(),headers=headers)
     return await exercise_helper(exercise_updated)
 
 #@router.post("/generate/exercises", response_model=list[ExercisesResponse])
@@ -48,15 +56,21 @@ async def update_exercise_by_id(exercise: ExercisesSchema, exercise_id: str):
 #    return response
 
 @router.get("/activities/{activity_id}", response_model=ActivityResponse)
-async def get_education_activity_by_id(activity_id: str):
-    response = await get_activity_by_id(activity_id)
+async def get_education_activity_by_id(activity_id: str, user=Depends(get_current_user)):
+    user_id = user["uid"]
+    internal_token = mint_internal_token(user_id=user_id)
+    headers={"Authorization": f"Bearer {internal_token}"}
+    response = await get_activity_by_id(activity_id, headers=headers)
     if not response:
         raise HTTPException(status_code=404, detail="Activity not found")
     return await activity_helper(response)
 
 @router.get("/exercises/{exercise_id}", response_model=ExercisesResponse)
-async def get_education_exercise_by_id(exercise_id: str):
-    response = await get_exercise_by_id(exercise_id)
+async def get_education_exercise_by_id(exercise_id: str, user=Depends(get_current_user)):
+    user_id = user["uid"]
+    internal_token = mint_internal_token(user_id=user_id)
+    headers={"Authorization": f"Bearer {internal_token}"}
+    response = await get_exercise_by_id(exercise_id, headers=headers)
     if not response:
         raise HTTPException(status_code=404, detail="Exercise not found")
     return await exercise_helper(response)
