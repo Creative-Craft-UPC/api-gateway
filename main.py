@@ -1,22 +1,23 @@
 from contextlib import asynccontextmanager
 import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from routers import education_routes, profile_education_routes, profile_routes, progress_routes
 from fastapi.middleware.cors import CORSMiddleware
 import firebase_admin
 from firebase_admin import credentials
 
+load_dotenv()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+
     # Lee la ruta del JSON de Firebase montado como secreto
-    firebase_sa_path = os.getenv("FIREBASE_SA_PATH", "/secrets/socialfun-upc-firebase-adminsdk-fbsvc-d0d5b4e65c.json")
-    cred = credentials.Certificate(firebase_sa_path)
-    firebase_admin.initialize_app(cred)
-    yield
-
+firebase_sa_path = os.getenv("FIREBASE_SA_PATH", "secrets/socialfun-upc-firebase-adminsdk-fbsvc-d0d5b4e65c.json")
+cred = credentials.Certificate(firebase_sa_path)
+print(cred)
+firebase_admin.initialize_app(cred)
 
 app = FastAPI(title="Gateway API")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # O usa el dominio de tu frontend

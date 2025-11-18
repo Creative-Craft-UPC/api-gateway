@@ -2,7 +2,10 @@
 import os, time, jwt
 
 # Sugerencia: guardar el PEM en una env var; alternativo: leer archivo
-PRIVATE_KEY = os.environ["PRIVATE_KEY"]
+PRIVATE_KEY_PATH = os.getenv("PRIVATE_KEY_PATH", "secrets/bff_private.pem")
+
+with open(PRIVATE_KEY_PATH, "rb") as f:
+    PRIVATE_KEY = f.read()
 
 def mint_internal_token(user_id: str, ttl_seconds: int = 300) -> str:
     now = int(time.time())

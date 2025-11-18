@@ -20,8 +20,8 @@ async def get_carer_profiles(headers: dict):
 async def get_carer_profile_by_id(carer_id: str, headers: dict):
     return await request("GET", f"{PROFILE_SERVICE_URL}/carer_profiles/{carer_id}",headers=headers)
 
-async def get_carer_profile_by_email(email: str, headers: dict):
-    return await request ("GET", f"{PROFILE_SERVICE_URL}/carer_profiles/email/{email}",headers=headers)
+async def get_carer_profile_by_email(email: str):
+    return await request ("GET", f"{PROFILE_SERVICE_URL}/carer_profiles/email/{email}")
 
 async def update_profile_for_asd(asdProfile: AsdProfileSchema, asd_id: str, headers: dict):
     return await request("PATCH", f"{PROFILE_SERVICE_URL}/asd_profiles/{asd_id}", json=asdProfile.dict(),headers=headers)
@@ -42,6 +42,6 @@ async def create_asd_profile(asdProfile: AsdProfileSchema, carer_id: str, header
     data = asdProfile.dict()
     return await request("POST", f"{PROFILE_SERVICE_URL}/asd_profiles/{carer_id}", json=data,headers=headers)
 
-async def create_carer_profile(carerProfile: CarerProfileSchema, headers: dict):
+async def create_carer_profile(carerProfile: CarerProfileSchema):
     data = carerProfile.dict()
-    return await request("POST", f"{PROFILE_SERVICE_URL}/carer_profiles/", json=data,headers=headers)
+    return await request("POST", f"{PROFILE_SERVICE_URL}/carer_profiles/", json=data)

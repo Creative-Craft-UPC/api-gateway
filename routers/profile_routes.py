@@ -19,11 +19,8 @@ async def get_profile_by_id_for_carer(carer_id: str, user=Depends(get_current_us
     return await carer_profile_light_helper(carer_profile)
 
 @router.post("/carer_profile/login/{email}", response_model=CarerProfileLightResponse)
-async def login_profile(email: str, user=Depends(get_current_user)):
-    user_id = user["uid"]
-    internal_token = mint_internal_token(user_id=user_id)
-    headers={"Authorization": f"Bearer {internal_token}"}
-    response = await get_carer_profile_by_email(email, headers=headers)
+async def login_profile(email: str):
+    response = await get_carer_profile_by_email(email)
     if response:
         return await carer_profile_light_helper(response)
     else:
@@ -58,12 +55,8 @@ async def get_asd_profile_by_id_for_carer(carer_id: str, user=Depends(get_curren
 
 #POST new carer profile
 @router.post("/carer_profile", response_model = CarerProfileLightResponse)
-async def create_profile_for_carer(profile: CarerProfileSchema, user=Depends(get_current_user)):
-    user_id = user["uid"]
-    internal_token = mint_internal_token(user_id=user_id)
-    headers={"Authorization": f"Bearer {internal_token}"}
-    
-    created_carer_profile = await create_carer_profile(profile, headers=headers)
+async def create_profile_for_carer(profile: CarerProfileSchema):
+    created_carer_profile = await create_carer_profile(profile)
     if not created_carer_profile:
         raise HTTPException(status_code=500, detail="Error del servicio de perfil")
     return created_carer_profile 
