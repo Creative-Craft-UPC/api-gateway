@@ -19,7 +19,7 @@ async def update_activity_by_id(activity: ActivitySchema, activity_id: str, user
     internal_token = mint_internal_token(user_id=user_id)
     headers={"Authorization": f"Bearer {internal_token}"}
     activity_dict = activity.dict()
-    db_activity = await get_activity_by_id(activity_id)
+    db_activity = await get_activity_by_id(activity_id, headers=headers)
     if not db_activity:
         raise HTTPException(status_code=404, detail="Actividad no encontrada")
     

@@ -19,4 +19,4 @@ async def get_record_data_by_id(record_id: str, user=Depends(get_current_user)):
     print(record)
     if not record:
         HTTPException(status_code=404, detail="Registro no encontrado")
-    return await record_helper(record)
+    return await record_helper(record, headers=headers)

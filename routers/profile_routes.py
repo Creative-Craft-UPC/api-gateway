@@ -33,7 +33,7 @@ async def update_asd_profile_by_id(asd_id: str, asdProfile: AsdProfileUpdateSche
     headers={"Authorization": f"Bearer {internal_token}"}
     response = await update_profile_for_asd(asdProfile, asd_id, headers=headers)
     if response:
-        return await asd_profile_helper(response)
+        return await asd_profile_helper(response, headers)
     else:
         raise HTTPException(status_code=404, detail="Usuario no está registrado o datos incompletos")
 
@@ -50,7 +50,7 @@ async def get_asd_profile_by_id_for_carer(carer_id: str, user=Depends(get_curren
     if not profiles:
         return []
     for asd_profile in profiles:
-        asd_profiles.append(await asd_profile_helper(asd_profile))
+        asd_profiles.append(await asd_profile_helper(asd_profile, headers))
     return asd_profiles
 
 #POST new carer profile
@@ -69,4 +69,4 @@ async def get_profile_by_id_for_asd(asd_id: str, user=Depends(get_current_user))
     headers={"Authorization": f"Bearer {internal_token}"}
     
     asd_profile = await get_asd_profile_by_id(asd_id, headers=headers)
-    return await asd_profile_helper(asd_profile)
+    return await asd_profile_helper(asd_profile, headers)

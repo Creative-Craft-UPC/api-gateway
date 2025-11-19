@@ -38,7 +38,7 @@ async def create_profile_for_asd(profile: AsdProfileSchema, carer_id: str, user=
         created_asd_profile["id"], exercises=exercise_ids, activities=activity_ids, headers=headers
     )
 
-    return await asd_profile_helper(updated_profile)
+    return await asd_profile_helper(updated_profile, headers)
 
 
 @router.put("/asd_profiles/{asd_id}/generate_all_exercises", response_model=AsdProfileResponse)
@@ -58,7 +58,7 @@ async def attach_education(asd_id: str, user=Depends(get_current_user)):
     updated_profile = await update_asd_profile_activities_exercises(
         asd_profile["id"], exercises=exercise_ids, activities=asd_profile.get("activities", []), headers=headers
     )
-    return await asd_profile_helper(updated_profile)
+    return await asd_profile_helper(updated_profile, headers)
 
 @router.get("/asd_profiles/{asd_id}/get_records", response_model=list[RecordResponse])
 async def get_all_records_by_asd_asd_id(asd_id: str, user=Depends(get_current_user)):
@@ -113,7 +113,7 @@ async def update_asd_profile_records(asd_id: str, data: ProgressDto, user=Depend
         asd_profile_updated = await update_asd_profile_records_service(asd_id, record_id_list, headers=headers)
 
 
-    return await asd_profile_helper(asd_profile_updated)
+    return await asd_profile_helper(asd_profile_updated, headers)
     
             
 

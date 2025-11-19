@@ -12,9 +12,9 @@ def attempt_helper(attempt: dict) -> dict:
         "date": attempt["date"],
     }
 
-async def record_helper(record: dict) -> dict:
+async def record_helper(record: dict, headers: dict) -> dict:
     attempts: List[dict] = []
-    attempts = await get_attempts_by_record_id(str(record["id"]))
+    attempts = await get_attempts_by_record_id(str(record["id"]), headers=headers)
 
     return {
         "id": str(record["id"]),
