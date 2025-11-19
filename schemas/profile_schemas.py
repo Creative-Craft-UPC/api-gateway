@@ -42,6 +42,7 @@ class AsdProfileMaskResponse(BaseModel):
     firstname: str
     lastname: str
     avatar: Optional[str] = Field(None)
+    gender: Optional[Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")]] = Field(..., example="femenino")
     
 
 class CarerProfileSchema(BaseModel):

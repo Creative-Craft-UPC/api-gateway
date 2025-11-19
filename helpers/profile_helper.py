@@ -48,6 +48,7 @@ def asd_mask_profile_helper(asdProfile: dict) -> dict:
         "firstname": asdProfile["firstname"],
         "lastname": asdProfile["lastname"],
         "avatar": asdProfile.get("avatar"),
+        "gender": asdProfile["gender"],
     }
 
 
