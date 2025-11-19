@@ -10,10 +10,8 @@ from firebase_admin import credentials
 load_dotenv()
 
 
-    # Lee la ruta del JSON de Firebase montado como secreto
 firebase_sa_path = os.getenv("FIREBASE_SA_PATH", "secrets/socialfun-upc-firebase-adminsdk-fbsvc-d0d5b4e65c.json")
 cred = credentials.Certificate(firebase_sa_path)
-print(cred)
 firebase_admin.initialize_app(cred)
 
 app = FastAPI(title="Gateway API")
