@@ -4,9 +4,9 @@ from services.profile_service import get_asd_profile_by_id
 from utils.http_client import request
 
 
-PROGRESS_SERVICE_URL = "https://backend-progress-service-1023529830652.europe-west1.run.app"
+PROGRESS_SERVICE_URL = "https://backend-progress-service-31496243302.europe-west1.run.app"
 
-async def post_create_record(record: RecordDto):
+async def post_create_record(record: RecordDto, headers: dict):
     data = {
         "max_time": 0,
         "min_time" : 0, 
@@ -14,40 +14,40 @@ async def post_create_record(record: RecordDto):
         "total_errors": 0, 
         "exercise_id": record.exercise_id,
     }
-    return await request("POST", f"{PROGRESS_SERVICE_URL}/records/", json=data)
+    return await request("POST", f"{PROGRESS_SERVICE_URL}/records/", json=data, headers=headers)
 
-async def post_create_attempt(attempt: AttemptDto, record_id):
+async def post_create_attempt(attempt: AttemptDto, record_id, headers: dict):
     data = attempt.dict()
-    return await request("POST", f"{PROGRESS_SERVICE_URL}/attempts/{record_id}", json=data)
+    return await request("POST", f"{PROGRESS_SERVICE_URL}/attempts/{record_id}", json=data, headers=headers)
 
-async def get_records():
-    return await request("GET", f"{PROGRESS_SERVICE_URL}/records/")
+async def get_records(headers: dict):
+    return await request("GET", f"{PROGRESS_SERVICE_URL}/records/", headers=headers)
 
-async def get_record_by_id(record_id: str):
-    return await request("GET", f"{PROGRESS_SERVICE_URL}/records/{record_id}")
+async def get_record_by_id(record_id: str, headers: dict):
+    return await request("GET", f"{PROGRESS_SERVICE_URL}/records/{record_id}", headers=headers)
 
-async def get_attempts_by_record_id(record_id: str):
-    return await request("GET", f"{PROGRESS_SERVICE_URL}/attempts/{record_id}")
+async def get_attempts_by_record_id(record_id: str, headers: dict):
+    return await request("GET", f"{PROGRESS_SERVICE_URL}/attempts/{record_id}", headers=headers)
 
-async def patch_attempt(record_id: str, history: RecordSchema):
+async def patch_attempt(record_id: str, history: RecordSchema, headers: dict):
     data = history.dict()
-    return await request("PATCH", f"{PROGRESS_SERVICE_URL}/records/{record_id}", json=data)
+    return await request("PATCH", f"{PROGRESS_SERVICE_URL}/records/{record_id}", json=data, headers=headers)
 
 
-async def delete_attempt(attempt_id: str):
-    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/attempts/{attempt_id}")
+async def delete_attempt(attempt_id: str, headers: dict):
+    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/attempts/{attempt_id}", headers=headers)
 
-async def delete_record(record_id: str):
-    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/records/{record_id}")
+async def delete_record(record_id: str, headers: dict):
+    return await request("DELETE", f"{PROGRESS_SERVICE_URL}/records/{record_id}", headers=headers)
 
 
-async def get_records_by_user_id(profile_id: str):
-    asd_data = await get_asd_profile_by_id(profile_id)
+async def get_records_by_user_id(profile_id: str, headers: dict):
+    asd_data = await get_asd_profile_by_id(profile_id, headers)
     records = []
     records_id = asd_data.get("records", [])
     if records_id:
         for id in records_id:
-            record = await get_record_by_id(id)
+            record = await get_record_by_id(id, headers)
             if record:
                 records.append(record)
     return records

@@ -8,9 +8,9 @@ from schemas.progress_schema import RecordResponse
 class AsdProfileSchema(BaseModel):
     firstname: Annotated[str, StringConstraints(min_length=1, max_length=30)] = Field(..., example="Jose")
     lastname: Annotated[str, StringConstraints(min_length=1, max_length=30)] = Field(..., example="Armando")
-    age: Annotated[int, Field(ge=6, le=11)] = Field(..., example=8)
+    age: int = Field(..., example=8)
     gender: Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")] = Field(..., example="femenino")
-    severityLevel: Annotated[int, Field(ge=1, le=2)] = Field(..., example=2)
+    severityLevel: Annotated[int, Field(ge=1, le=3)] = Field(..., example=2)
     favouriteColor: str = Field(..., example="azul")
     avatar: Optional[str] = Field(None)
     visualComprehension: Annotated[int, Field(ge=1, le=3)] = Field(..., example=2)
@@ -21,9 +21,9 @@ class AsdProfileSchema(BaseModel):
 class AsdProfileUpdateSchema(BaseModel):
     firstname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Jose")
     lastname: Optional[Annotated[str, StringConstraints(min_length=1, max_length=30)]] = Field(..., example="Armando")
-    age: Optional[Annotated[int, Field(ge=6, le=11)]] = Field(..., example=8)
+    age: Optional[int] = Field(..., example=8)
     gender: Optional[Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")]] = Field(..., example="femenino")
-    severityLevel: Optional[Annotated[int, Field(ge=1, le=2)]] = Field(..., example=2)
+    severityLevel: Optional[Annotated[int, Field(ge=1, le=3)]] = Field(..., example=2)
     favouriteColor: Optional[str] = Field(..., example="azul")
     avatar: Optional[str] = Field(None)
     visualComprehension: Optional[Annotated[int, Field(ge=1, le=3)]] = Field(..., example=2)
@@ -37,6 +37,14 @@ class AsdProfileResponse(AsdProfileSchema):
     exercises: List[ExercisesResponse]
     records: List[RecordResponse]
 
+class AsdProfileMaskResponse(BaseModel):
+    id: str = Field(..., example="665f1b0c543ed91f9a1d0ef9")
+    firstname: str
+    lastname: str
+    avatar: Optional[str] = Field(None)
+    gender: Optional[Annotated[str, StringConstraints(pattern="^(masculino|femenino|otro)$")]] = Field(..., example="femenino")
+    
+
 class CarerProfileSchema(BaseModel):
     firstname: Annotated[str, StringConstraints(min_length=1)] = Field(..., example="Martin")
     lastname: Annotated[str, StringConstraints(min_length=1)] = Field(..., example="Cueva")
@@ -49,6 +57,13 @@ class CarerProfileResponse(BaseModel):
     lastname: str
     email: str
     asd_profiles: List[AsdProfileResponse]
+
+class CarerProfileLightResponse(BaseModel):
+    id: str
+    firstname: str
+    lastname: str
+    email: str
+    asd_profiles: List[AsdProfileMaskResponse]
 
 class UpdateEducationforAsdProfileSchema(BaseModel):
     activities: Optional[List[str]] = Field(default_factory=list)

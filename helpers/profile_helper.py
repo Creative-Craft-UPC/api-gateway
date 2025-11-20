@@ -5,22 +5,22 @@ from services.education_service import get_activity_by_id, get_exercise_by_id
 from services.profile_service import get_asd_profile_by_id
 from services.progress_service import get_record_by_id
 
-async def asd_profile_helper(asdProfile: dict) -> dict:
+async def asd_profile_helper(asdProfile: dict, headers: dict) -> dict:
     activities: List[dict] = []
     for activity_id in asdProfile.get("activities",[]):
-        activity = await get_activity_by_id(activity_id)
+        activity = await get_activity_by_id(activity_id, headers=headers)
         if activity:
             activities.append(activity)
 
     exercises: List[dict] = []
     for exercise_id in asdProfile.get("exercises", []):
-        exercise = await get_exercise_by_id(exercise_id)
+        exercise = await get_exercise_by_id(exercise_id, headers=headers)
         if exercise:
             exercises.append(exercise)
 
     records: List[dict] = []
     for record_id in asdProfile.get("records", []):
-        record = await get_record_by_id(record_id)
+        record = await get_record_by_id(record_id, headers=headers)
         if record:
             records.append(record)
 
@@ -42,13 +42,22 @@ async def asd_profile_helper(asdProfile: dict) -> dict:
         "records": records,
     } 
 
+def asd_mask_profile_helper(asdProfile: dict) -> dict:
+    return {
+        "id": str(asdProfile["id"]),
+        "firstname": asdProfile["firstname"],
+        "lastname": asdProfile["lastname"],
+        "avatar": asdProfile.get("avatar"),
+        "gender": asdProfile["gender"],
+    }
 
-async def carer_profile_helper(carerProfile: dict) -> dict:
+
+async def carer_profile_helper(carerProfile: dict, headers: dict) -> dict:
     asd_profiles: List[dict] = []
     for asd_profile in carerProfile.get("asd_profiles", []):
-        profile_doc = await get_asd_profile_by_id(str(asd_profile["id"]))
+        profile_doc = await get_asd_profile_by_id(str(asd_profile["id"]), headers=headers)
         if profile_doc:
-            asd_profiles.append(await asd_profile_helper(profile_doc))
+            asd_profiles.append(await asd_profile_helper(profile_doc, headers=headers))
 
     return {
         "id": str(carerProfile["id"]),
@@ -58,5 +67,15 @@ async def carer_profile_helper(carerProfile: dict) -> dict:
         "asd_profiles": asd_profiles
     } 
 
+async def carer_profile_light_helper(carerProfile: dict) -> dict:
+    asd_profiles: List[dict] = []
+    asd_profiles = carerProfile.get("asd_profiles")
+    return {
+        "id": str(carerProfile["id"]),
+        "firstname": carerProfile["firstname"],
+        "lastname": carerProfile["lastname"],
+        "email": carerProfile["email"],
+        "asd_profiles": asd_profiles
+    } 
 
 
